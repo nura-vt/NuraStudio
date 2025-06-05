@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專業產品渲染 | Nura Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微軟雅黑', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* 置頂導航欄 */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-left: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* 頁首 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6rem 0 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo {
+            width: 90px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 包月服務區塊 */
+        .subscription-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .subscription-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subscription-section p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.95;
+        }
+
+        /* 服務類別 */
+        .services-section {
+            background: white;
+            padding: 3rem 0;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .services-section h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: transform 0.5s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scale(1.2);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 估價表單區塊 */
+        .quote-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 3rem 0;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .quote-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .quote-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .quote-info p {
+            margin-bottom: 1rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .quote-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* PayPal 支付區塊 */
+        .payment-section {
+            background: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .paypal-logo {
+            width: 80px;
+            height: 21px;
+            background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
+            margin: 0 auto 1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .payment-section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 頁尾 */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* 聊天按鈕 - 已移除 */
+
+        /* 動畫效果 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- 置頂導航欄 -->
+    <nav class="top-nav">
+        <div class="nav-content">
+            <div style="display: flex; align-items: center;">
+                <div class="nav-logo">N</div>
+                <div class="nav-title">NURA STUDIO</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#subscription">包月服務</a></li>
+                <li><a href="#services">服務類別</a></li>
+                <li><a href="#quote">估價表單</a></li>
+                <li><a href="#payment">付款方式</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 頁首 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">N</div>
+            <h1>NURA STUDIO</h1>
+            <p>專業產品渲染服務</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 包月服務 -->
+        <section id="subscription" class="subscription-section fade-in">
+            <h2>包月服務</h2>
+            <p>需要每月固定的產量嗎?</p>
+            <p>我們提供優惠的方案</p>
+            <p>並且適用於多種委託類型</p>
+        </section>
+
+        <!-- 服務類別 -->
+        <section id="services" class="services-section fade-in animate-delay-1">
+            <div class="container">
+                <h2>服務類別</h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                    我們能幫你做甚麼呢<br>
+                    總有一項是你需要的
+                </p>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>🎨 產品渲染</h3>
+                        <p>需要照片等級的產品渲染?還是想要完整的產品動畫用於發布會?我們全都能為您量身打造。輕鬆打造實體攝影所不能做到的事情!</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <h3>🏠 室內設計渲染</h3>
+                        <p>有了室內3D圖後想要逼真的渲染嗎?不論是材質或是家俱都任君選擇。</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <h3>🖥️ 3D 建模</h3>
+                        <p>有想要製作的模型卻不知從何下手嗎?沒問題交給我們!</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <h3>📺 客製化直播間</h3>
+                        <p>只屬於你的全客製化直播間</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 估價表單 -->
+        <section id="quote" class="quote-section fade-in animate-delay-2">
+            <div class="container">
+                <div class="quote-content">
+                    <div class="quote-info">
+                        <h2>估價表單</h2>
+                        <p>需要詳細的估價嗎?</p>
+                        <p>每件委託的實際製作時長以及複雜度不盡相同</p>
+                        <p>故沒有固定價錢</p>
+                        <p>有任何估價上的疑問請善用右側表單</p>
+                        <p>並且請敘述的盡可能詳細</p>
+                        <p><strong>⚠️ 注意：目前表單為展示用途，實際表單需要後端服務支援</strong></p>
+                        <p>若遇上表單出現問題也歡迎使用推特聯繫</p>
+                    </div>
+                    
+                    <form class="quote-form" id="quoteForm">
+                        <div class="form-group">
+                            <label for="name">姓名 *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">電子郵件 *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="service">服務類型</label>
+                            <select id="service" name="service" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                                <option value="">請選擇服務類型</option>
+                                <option value="product-render">產品渲染</option>
+                                <option value="interior-design">室內設計渲染</option>
+                                <option value="3d-modeling">3D 建模</option>
+                                <option value="streaming-room">客製化直播間</option>
+                                <option value="monthly-service">包月服務</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="details">詳細需求 *</label>
+                            <textarea id="details" name="details" placeholder="請詳細描述您的需求..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">提交估價需求</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- PayPal 支付 -->
+        <section id="payment" class="payment-section fade-in animate-delay-3">
+            <div class="paypal-logo">PayPal</div>
+            <p>支援PayPal付款管道讓交易全球不受阻</p>
+            <p>台灣客戶另有其他付款選擇請來信詢問</p>
+        </section>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <div class="container">
+            <p>All media copyright belongs to NURA Studio</p>
+        </div>
+    </footer>
+
+    <!-- 聊天按鈕已移除 -->
+
+    <script>
+        // 表單提交處理
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const service = formData.get('service');
+            const details = formData.get('details');
+            
+            // 提醒用戶這是展示用表單
+            alert(`⚠️ 這是展示用表單！\n\n收到的資訊：\n姓名: ${name}\n電子郵件: ${email}\n服務類型: ${service}\n詳細需求: ${details}\n\n如需真正可用的表單，請聯繫開發者設定後端服務或使用第三方表單服務（如 Formspree、Netlify Forms 等）`);
+            
+            // 重置表單
+            this.reset();
+        });
+
+        // 聊天功能已移除
+
+        // 滾動動畫
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // 觀察所有動畫元素
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
